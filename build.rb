@@ -13,6 +13,7 @@ require 'open-uri'
 #urls = [qiita1] 
 urls = [zenn] 
 
+=begin
 def parse_atom(rss)
   p rss.class
   puts "rss----------------------------------------------------------------------------------------------------------"
@@ -37,23 +38,35 @@ def parse_atom(rss)
     p entry.id.content
   end
 end
+=end
 
 def parse_rss(rss)
-=begin
   p rss.class
   puts "rss----------------------------------------------------------------------------------------------------------"
   puts rss.version
   puts rss.feed_type
   puts rss.feed_version
   puts rss.encoding
-  #puts rss.generator
   puts "rss.channel----------------------------------------------------------------------------------------------------------"
   puts rss.channel.description
+  puts rss.channel.generator
   puts rss.channel.image.title
   puts rss.channel.image.link
   puts rss.channel.image.url
+  puts "rss.channel.item----------------------------------------------------------------------------------------------------------"
+  rss.channel.items.each do |item|
+    puts item.title
+    puts item.description
+    puts item.enclosure.url
+    puts item.guid.content
+    puts item.link
+    puts item.pubDate
+    puts "rss.channel.item.dc_creator----------------------------------------------------------------------------------------------------------"
+    item.dc_creators.each do |dc_creator|
+      puts dc_creator.content
+    end
+  end
   puts "rss all----------------------------------------------------------------------------------------------------------"
-=end
   pp rss
 end
 
