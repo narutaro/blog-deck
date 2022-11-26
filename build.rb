@@ -1,5 +1,6 @@
 require 'rss'
 require 'open-uri'
+require 'erb'
 
 # favicon
   # www.google.com/s2/favicons?domain=zenn.dev
@@ -9,7 +10,7 @@ zenn = 'https://zenn.dev/masaino/feed'
 qiita = 'https://qiita.com/narutaro/feed'
 urls = [zenn, qiita] 
 
-class RSSParser
+class Blog
 
   def initialize
     @posts = {}
@@ -47,7 +48,7 @@ class RSSParser
     end
   end
 
-  def run(urls)
+  def run_rss_parse(urls)
     urls.each do |url|
       URI.open(url) do |xml|
         rss = RSS::Parser.parse(xml, false)
@@ -63,8 +64,16 @@ class RSSParser
     end
   end
 
+  def date_format
+  end
+
 end
 
-rssp = RSSParser.new
-rssp.run(urls)
-pp rssp.posts
+rssp = Blog.new
+rssp.run_rss_parse(urls)
+
+posts = rssp.posts
+
+template = "index.erb"
+erb = ERB.new(File.read(template))
+puts erb.result(binding)
