@@ -11,14 +11,14 @@
 <section class="hero-section">
   <div class="card-grid">
     <% posts.each do |key, post| %>
-    <a class="card" href="#">
+      <a class="card" href="<%= post[:link] %>">
       <div class="card__background"></div>
       <div class="card__content">
         <p class="date"><%= post[:published] %></p>
-        <p class="icon_text"><img class="icon" src="https://www.google.com/s2/favicons?sz=32&amp;domain_url=https://zenn.dev" width="16" height="16" alt="zenn.dev">zenn.dev</p>
+        <p class="icon_text"><img class="icon" src="https://www.google.com/s2/favicons?sz=32&amp;domain_url=https://<%= post[:host] %>" width="16" height="16" alt="<%= post[:host] %>"><%= post[:host] %></p>
         <h3 class="card__heading"><%= post[:title] %></h3>
         <p class="card__description"><%= post[:content] %></p>
-        <p class="icon_text"><img class="icon" src="https://www.google.com/s2/favicons?sz=32&amp;domain_url=https://zenn.dev" width="16" height="16" alt="zenn.dev"><%= post[:author] %></p>
+        <p class="icon_text"><img class="icon" src="<%= config[:gravater] %>" width="18" height="18" alt="gravater"><%= post[:author] %></p>
       </div>
     </a>
     <% end %>

@@ -2,6 +2,7 @@ require 'rss'
 require 'open-uri'
 require 'erb'
 require 'uri'
+require 'date'
 
 
 
@@ -12,6 +13,10 @@ require 'uri'
 zenn = 'https://zenn.dev/masaino/feed'
 qiita = 'https://qiita.com/narutaro/feed'
 urls = [zenn, qiita] 
+
+config = {
+  gravater: 'https://2.gravatar.com/userimage/73769069/6a402895e21ba364812a7b6c655f0b73'
+}
 
 class Blog
 
@@ -28,8 +33,8 @@ class Blog
       post[:content] = entry.content.content 
       post[:link] = entry.link.href 
       post[:host] = URI.parse(post[:link]).host
-      post[:updated] = entry.updated.content 
-      post[:published] = entry.published.content 
+      post[:updated] = format_date(entry.updated.content) 
+      post[:published] = format_date(entry.published.content)
       post[:author] = entry.author.name.content 
       post[:id] = entry.id.content 
       @posts[i] = post
@@ -44,7 +49,7 @@ class Blog
       post[:link] = item.link
       post[:host] = URI.parse(post[:link]).host
       post[:updated] = nil
-      post[:published] = item.pubDate
+      post[:published] = format_date(item.pubDate)
       post[:author] = item.dc_creators[0].content
       post[:id] = nil
       @posts[i] = post
@@ -67,18 +72,16 @@ class Blog
     end
   end
 
-  def format_date
+  def format_date(date_string)
+    date_string.strftime("%Y-%m-%d")
   end
 
   def format_content(content)
-    puts "as is: " + content
     content = content.delete("\n")
-    puts "removed retrun: " + content
     URI.extract(content) do |u|
       content = content.gsub(u, '')
     end
-    puts "remove url: " + content
-    content
+    content.slice(0, 100)
   end
 
 end
@@ -87,6 +90,8 @@ rssp = Blog.new
 rssp.run_rss_parse(urls)
 
 posts = rssp.posts
+
+pp posts
 
 #template = "index.erb"
 erb = ERB.new(File.read("index.erb"))
