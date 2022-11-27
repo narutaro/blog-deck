@@ -37,7 +37,7 @@ class Blog
     rss.channel.items.each_with_index do |item, i|
       post = {}
       post[:title] = item.title
-      post[:content] = item.description
+      post[:content] = format_content(item.description)
       post[:link] = item.link
       post[:host] = URI.parse(post[:link]).host
       post[:updated] = nil
@@ -64,7 +64,11 @@ class Blog
     end
   end
 
-  def date_format
+  def format_date
+  end
+
+  def format_content(content)
+    content.delete("\n")
   end
 
 end
@@ -74,6 +78,7 @@ rssp.run_rss_parse(urls)
 
 posts = rssp.posts
 
-template = "index.erb"
-erb = ERB.new(File.read(template))
-puts erb.result(binding)
+#template = "index.erb"
+erb = ERB.new(File.read("index.erb"))
+File.write("index.html", erb.result(binding))
+#puts erb.result(binding)
