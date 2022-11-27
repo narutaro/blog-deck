@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+<link rel="stylesheet" href="index.css">
+</head>
+
+<section class="hero-section">
+  <div class="card-grid">
+    <% posts.each do |key, post| %>
+    <a class="card" href="#">
+      <div class="card__background"></div>
+      <div class="card__content">
+        <p class="date"><%= post[:published] %></p>
+        <p class="icon_text"><img class="icon" src="https://www.google.com/s2/favicons?sz=32&amp;domain_url=https://zenn.dev" width="16" height="16" alt="zenn.dev">zenn.dev</p>
+        <h3 class="card__heading"><%= post[:title] %></h3>
+        <p class="card__description"><%= post[:content] %></p>
+        <p class="icon_text"><img class="icon" src="https://www.google.com/s2/favicons?sz=32&amp;domain_url=https://zenn.dev" width="16" height="16" alt="zenn.dev"><%= post[:author] %></p>
+      </div>
+    </a>
+    <% end %>
+  <div>
+</section>
+
+</html>

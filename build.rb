@@ -1,6 +1,9 @@
 require 'rss'
 require 'open-uri'
 require 'erb'
+require 'uri'
+
+
 
 # favicon
   # www.google.com/s2/favicons?domain=zenn.dev
@@ -68,7 +71,14 @@ class Blog
   end
 
   def format_content(content)
-    content.delete("\n")
+    puts "as is: " + content
+    content = content.delete("\n")
+    puts "removed retrun: " + content
+    URI.extract(content) do |u|
+      content = content.gsub(u, '')
+    end
+    puts "remove url: " + content
+    content
   end
 
 end

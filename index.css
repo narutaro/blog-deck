@@ -106,6 +106,7 @@ body{
 .card__description{
   color: var(--text-light);
   margin-bottom: var(--spacing-l);
+  word-break: break-word;
 }
 
 .icon{
