@@ -4,15 +4,15 @@ require 'erb'
 require 'uri'
 require 'date'
 
-
-
 # favicon
   # www.google.com/s2/favicons?domain=zenn.dev
   # www.google.com/s2/favicons?domain=qiita.com
 
 zenn = 'https://zenn.dev/masaino/feed'
 qiita = 'https://qiita.com/narutaro/feed'
-urls = [zenn, qiita] 
+hashnode = 'https://senzu.hashnode.dev/rss.xml'
+urls = [zenn, qiita, hashnode] 
+#urls = [zenn, qiita] 
 
 config = {
   gravater: 'https://2.gravatar.com/userimage/73769069/6a402895e21ba364812a7b6c655f0b73'
@@ -21,28 +21,28 @@ config = {
 class Blog
 
   def initialize
-    @posts = {}
+    @posts = [] 
   end
 
   attr_reader :posts
 
   def parse_atom(rss)
-    rss.entries.each_with_index do |entry, i|
+    rss.entries.each do |entry|
       post = {}
       post[:title] = entry.title.content 
-      post[:content] = entry.content.content 
+      post[:content] = format_content(entry.content.content)
       post[:link] = entry.link.href 
       post[:host] = URI.parse(post[:link]).host
       post[:updated] = format_date(entry.updated.content) 
       post[:published] = format_date(entry.published.content)
       post[:author] = entry.author.name.content 
       post[:id] = entry.id.content 
-      @posts[i] = post
+      @posts << post
     end
   end
 
   def parse_rss(rss)
-    rss.channel.items.each_with_index do |item, i|
+    rss.channel.items.each do |item|
       post = {}
       post[:title] = item.title
       post[:content] = format_content(item.description)
@@ -52,7 +52,8 @@ class Blog
       post[:published] = format_date(item.pubDate)
       post[:author] = item.dc_creators[0].content
       post[:id] = nil
-      @posts[i] = post
+      # RSSが二回呼ばれとIDが重複して前のが消える！
+      @posts << post
     end
   end
 
@@ -60,6 +61,8 @@ class Blog
     urls.each do |url|
       URI.open(url) do |xml|
         rss = RSS::Parser.parse(xml, false)
+        #puts "------#{url}------"
+        #pp rss
         case rss.class.to_s
         when 'RSS::Rss' then
           parse_rss(rss)
@@ -77,11 +80,16 @@ class Blog
   end
 
   def format_content(content)
+    # remove \n
     content = content.delete("\n")
+    # remote URLs
     URI.extract(content) do |u|
-      content = content.gsub(u, '')
+      content = content.gsub(u, " ")
     end
-    content.slice(0, 100)
+    # remove HTML tags
+    content = content.gsub(/<\/?[^>]*>/, "")
+    # make it less than 100 charactor
+    content.slice(0, 100) + " ..."
   end
 
 end
@@ -89,9 +97,8 @@ end
 rssp = Blog.new
 rssp.run_rss_parse(urls)
 
-posts = rssp.posts
-
-pp posts
+posts = rssp.posts.sort_by{ |entry| entry[:published] }.reverse
+# pp posts
 
 #template = "index.erb"
 erb = ERB.new(File.read("index.erb"))
