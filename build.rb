@@ -52,7 +52,6 @@ class Blog
       post[:published] = format_date(item.pubDate)
       post[:author] = item.dc_creators[0].content
       post[:id] = nil
-      # RSSが二回呼ばれとIDが重複して前のが消える！
       @posts << post
     end
   end
@@ -61,8 +60,6 @@ class Blog
     urls.each do |url|
       URI.open(url) do |xml|
         rss = RSS::Parser.parse(xml, false)
-        #puts "------#{url}------"
-        #pp rss
         case rss.class.to_s
         when 'RSS::Rss' then
           parse_rss(rss)
@@ -81,10 +78,10 @@ class Blog
 
   def format_content(content)
     # remove \n
-    content = content.delete("\n")
+    content = content.gsub("\n", " ")
     # remote URLs
     URI.extract(content) do |u|
-      content = content.gsub(u, " ")
+      content = content.gsub(u, "")
     end
     # remove HTML tags
     content = content.gsub(/<\/?[^>]*>/, "")
