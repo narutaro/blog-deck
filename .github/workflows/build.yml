@@ -29,7 +29,7 @@ jobs:
           git config --local user.email "narusan@mac.com"
           git config --local user.name "${{github.actor}}"
           
-      - name: Commit and push pages
+      - name: commit and push pages
         run: |
           git add index.html 
           git commit -m "$(date)" -a
