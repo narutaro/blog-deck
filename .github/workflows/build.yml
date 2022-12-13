@@ -1,7 +1,10 @@
-name: Build Pages
-on: 
-  schedule:
-    - cron: 23 1 * * *
+name: build blog deck
+
+on: [ workflow_dispatch ]
+
+  #on: 
+  #schedule:
+  #  - cron: 23 1 * * *
 
 jobs:
   build-pages:
