@@ -32,6 +32,6 @@ jobs:
       - name: Commit and push pages
         run: |
           git add index.html 
-          git commit -m "update" -a
+          git commit -m "$(date)" -a
           git pull
           git push origin main
