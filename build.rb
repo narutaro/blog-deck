@@ -101,3 +101,5 @@ posts = rssp.posts.sort_by{ |entry| entry[:published] }.reverse
 erb = ERB.new(File.read("index.erb"))
 File.write("index.html", erb.result(binding))
 #puts erb.result(binding)
+
+puts Time.now
