@@ -96,10 +96,10 @@ rssp.run_rss_parse(urls)
 
 posts = rssp.posts.sort_by{ |entry| entry[:published] }.reverse
 
-erb = ERB.new(File.read("index.erb"))
-File.write("index.html", erb.result(binding))
-
 dir_name = "pub"
-Dir.mkdir(dir_name) unless File.exists?(dir_name)    
+Dir.mkdir(dir_name) unless File.exists?(dir_name)   
     
+erb = ERB.new(File.read("index.erb"))
+File.write("#{dir_name}/index.html", erb.result(binding))
+
 puts Time.now
