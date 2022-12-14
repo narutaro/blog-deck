@@ -3,6 +3,7 @@ require 'open-uri'
 require 'erb'
 require 'uri'
 require 'date'
+require 'fileutils'
 
 # favicon
   # www.google.com/s2/favicons?domain=zenn.dev
@@ -96,10 +97,10 @@ rssp.run_rss_parse(urls)
 
 posts = rssp.posts.sort_by{ |entry| entry[:published] }.reverse
 
-dir_name = "pub"
-Dir.mkdir(dir_name) unless File.exist?(dir_name)   
-    
+FileUtils.mkdir_p 'pub'
+FileUtils.cp 'index.css', 'pub'
+
 erb = ERB.new(File.read("index.erb"))
-File.write("#{dir_name}/index.html", erb.result(binding))
+File.write("pub/index.html", erb.result(binding))
 
 puts Time.now
