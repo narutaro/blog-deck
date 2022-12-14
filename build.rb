@@ -95,11 +95,11 @@ rssp = Blog.new
 rssp.run_rss_parse(urls)
 
 posts = rssp.posts.sort_by{ |entry| entry[:published] }.reverse
-# pp posts
 
-#template = "index.erb"
 erb = ERB.new(File.read("index.erb"))
 File.write("index.html", erb.result(binding))
-#puts erb.result(binding)
 
+dir_name = "pub"
+Dir.mkdir(dir_name) unless File.exists?(dir_name)    
+    
 puts Time.now
